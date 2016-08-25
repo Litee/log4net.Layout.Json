@@ -40,7 +40,8 @@ namespace log4net.Layout.Json
                 ["workingSet"] = Environment.WorkingSet,
                 ["osVersion"] = Environment.OSVersion.ToString(),
                 ["is64bitOS"] = Environment.Is64BitOperatingSystem,
-                ["is64bitProcess"] = Environment.Is64BitProcess
+                ["is64bitProcess"] = Environment.Is64BitProcess,
+                ["properties"] = e.GetProperties()
             };
             writer.Write(JsonConvert.SerializeObject(dic));
         }
