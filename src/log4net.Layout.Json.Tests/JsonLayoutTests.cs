@@ -14,6 +14,7 @@ namespace log4net.Layout.Json.Tests
         {
             var repositoryId = Guid.NewGuid().ToString();
             var hierarchy = LogManager.CreateRepository(repositoryId) as Hierarchy;
+            Assert.NotNull(hierarchy);
             var appender = new TestAppender
             {
                 Layout = new JsonLayout()
@@ -23,11 +24,34 @@ namespace log4net.Layout.Json.Tests
             hierarchy.Configured = true;
             var log = LogManager.GetLogger(repositoryId, nameof(JsonLayoutTests));
             log.Info("DummyText");
-            //            log.Info(new {IntProperty = 123, StringProperty = "ABC", DateTimeProperty = new DateTime(2000, 1, 2)});
-            //          log.Error("", new Exception("Dummy message"));
 
             dynamic obj = JsonConvert.DeserializeObject(appender.RecordedMessages[0]);
             Assert.Matches("[0-9a-z\\-]+", obj["processSessionId"].ToString());
+        }
+
+        [Fact]
+        public void ShouldCaptureGlobalContext()
+        {
+            var repositoryId = Guid.NewGuid().ToString();
+            var hierarchy = LogManager.CreateRepository(repositoryId) as Hierarchy;
+            Assert.NotNull(hierarchy);
+            var appender = new TestAppender
+            {
+                Layout = new JsonLayout()
+            };
+            hierarchy.Root.AddAppender(appender);
+            hierarchy.Root.Level = Level.All;
+            hierarchy.Configured = true;
+            var log = LogManager.GetLogger(repositoryId, nameof(JsonLayoutTests));
+            GlobalContext.Properties["key"] = "value";
+            log.Info("Message");
+
+            dynamic obj = JsonConvert.DeserializeObject(appender.RecordedMessages[0]);
+            var value = (string)obj["properties"]["key"];
+            Assert.True("value".Equals( value));
+            Assert.Matches("[0-9a-z\\-]+", obj["processSessionId"].ToString());
+            var renderedMessage = (string) obj["renderedMessage"];
+            Assert.True("Message".Equals(renderedMessage));
         }
     }
 }
