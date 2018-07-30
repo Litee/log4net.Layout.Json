@@ -17,7 +17,7 @@ Very simple implementation of log4net Layout that outputs JSON. Can be used, for
             <param name="DatePattern" value="_yyyyMMddHH&quot;.log&quot;" />
             <param name="RollingStyle" value="Date" />
             <param name="StaticLogFileName" value="false" />
-            <layout type="log4net.Layout.Json.JsonLogLayout"></layout>
+            <layout type="log4net.Layout.Json.JsonLayout"></layout>
         </appender>
         <root>
             <level value="DEBUG"/>
