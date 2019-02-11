@@ -18,6 +18,17 @@ namespace log4net.Layout.Json
         {
         }
 
+        /// <summary>
+        /// IgnoresException. f this layout handles the exception object contained within LoggingEvent, then the layout should return false. Otherwise, if the layout ignores the exception object, then the layout should return true.
+        /// </summary>
+        public override bool IgnoresException
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public override void Format(TextWriter writer, LoggingEvent e)
         {
             var dic = new Dictionary<string, object>
